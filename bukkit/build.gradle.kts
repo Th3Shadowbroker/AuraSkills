@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     `java-library`
+    `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
     id("com.modrinth.minotaur") version "2.+"
@@ -173,3 +174,10 @@ fun extractChangelog(version: String): String {
         ?: throw IllegalArgumentException("Failed to extract changelog section for version $version")
 }
 
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifact(tasks.shadowJar.flatMap { it.archiveFile }.get())
+        }
+    }
+}
